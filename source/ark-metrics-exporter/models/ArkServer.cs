@@ -26,13 +26,29 @@ namespace com.gamecodeplus.arkmetricsexporter.models
                 configItem.QueryTimeSeconds = 30;
             }
 
-            serverQuery = new SteamServerQuery(new System.Net.IPEndPoint(IPAddress.Parse(configItem.IPAddress), configItem.Port));
+            serverQuery = new SteamServerQuery(GetEndPoint(configItem));
 
             this.configItem = configItem;
             readyTimer = new Timer((double)configItem.QueryTimeSeconds * 1000);
             readyTimer.AutoReset = true;
             readyTimer.Elapsed += ReadyTimer_Elapsed;
             readyTimer.Start();
+        }
+
+        private static IPEndPoint GetEndPoint(ArkAppConfig.ArkAppServerConfig configItem)
+        {
+            if (!string.IsNullOrEmpty(configItem.IPAddress))
+            {
+                return new IPEndPoint(IPAddress.Parse(configItem.IPAddress), configItem.Port);
+            }
+            else if(!string.IsNullOrEmpty(configItem.Host))
+            {
+                return new IPEndPoint(Dns.GetHostAddresses(configItem.Host).FirstOrDefault(), configItem.Port);
+            }
+            else
+            {
+                throw new Exception("No IP address or hostname specified");
+            }
         }
 
         private void ReadyTimer_Elapsed(object sender, ElapsedEventArgs e)

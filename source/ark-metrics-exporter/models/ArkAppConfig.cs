@@ -14,6 +14,9 @@ namespace com.gamecodeplus.arkmetricsexporter.models
             [YamlMember(Alias = "ip-address", ApplyNamingConventions = false)]
             public string IPAddress { get; set; }
 
+            [YamlMember(Alias = "host", ApplyNamingConventions = false)]
+            public string Host { get; set; }
+
             [YamlMember(Alias = "port", ApplyNamingConventions = false)]
             public int Port { get; set; }
 
